@@ -1,0 +1,74 @@
+#!/bin/bash
+cp -p src/* tmp/
+
+usage="$(basename "$0") [-p] [-e] [-k] code generator for redux-angular boilerplate
+where:
+    -p  (required) path of project directory (e.g. ~/path/to/your/project)
+    -e  (required) entity name (e.g. Foo)
+    -k  (optional) entity key name (defaults to FooId)"
+
+DEFAULT_KEYPATH="../model/key"
+
+while getopts ':p:e:k:' o; do
+  case "$o" in
+    h) echo "$usage"
+       exit
+       ;;
+    p) ProjectPath="$(realpath -s $OPTARG)/src/app"
+       ;;
+    e)
+       # entity substitution variables (USER, User, user)
+       ENTITY=${OPTARG^^}
+       Entity=${OPTARG^}
+       entity=${OPTARG,,}
+       ;;
+    k)
+       # key/keypath substitution variables (Pk, pk)
+       Key="${OPTARG^}"
+       KeyPath="$DEFAULT_KEYPATH/${OPTARG,,}"
+       if [ $Key = "Pk" ]; then
+         KeyPath="ionic-state"
+       fi
+       ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+# missing args, show help
+if [ -z $ProjectPath ] || [ -z $Entity ]; then
+  echo "$usage"
+  exit
+fi
+
+# non-existent target project directory
+if [ ! -d "$ProjectPath" ]; then
+  echo "path '$ProjectPath' does not exist!"
+  exit
+fi
+
+# provide default key/keypath
+if [ -z $Key ]; then
+  Key="${Entity}Id"
+  KeyPath="$DEFAULT_KEYPATH/${entity}-id"
+fi
+
+echo
+echo "generating redux source files for '$entity' using path: '$ProjectPath'"
+echo "substitution variables
+  >> $ENTITY $Entity $entity $Key $KeyPath"
+
+# find/replace substitution variables in target source files
+sed -i 's/{ENTITY}/'${ENTITY}'/g' tmp/*
+sed -i 's/{Entity}/'${Entity}'/g' tmp/*
+sed -i 's/{entity}/'${entity}'/g' tmp/*
+# use pipes to workaround around sed erroring on slashes in path replacement
+sed -i 's|{KeyPath}|'${KeyPath}'|g' tmp/*
+sed -i 's/{Key}/'${Key}'/g' tmp/*
+
+# copy modified source files to target directories
+files=tmp/*.ts
+for f in $files
+do
+  path="$ProjectPath/$(basename $f .ts)/${entity}.ts"
+  cp -p $f $path
+done
