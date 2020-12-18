@@ -10,7 +10,7 @@ export class {Entity}Store extends EntityStore<{Entity}, {Key}> {
   constructor(protected store: Store<AppState>) {
     super(
       new actions.Entity(),
-      store.select(x => x.{entity}),
+      store.select(x => x.{entityProp}),
       (x: state.{Entity}State) => state.selector.selectAll(x).map({Entity}.apply)
     )
   }

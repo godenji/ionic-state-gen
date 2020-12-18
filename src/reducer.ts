@@ -7,7 +7,7 @@ import * as actions from '../action/{entity}'
 export interface {Entity}State extends EntityState<{Entity}, {Key}> {}
 
 export const adapter: EntityAdapter<{Entity}> = createEntityAdapter<{Entity}>({
-  selectId: ({entity}: {Entity}) => `${{entity}.id}`,
+  selectId: ({entityProp}: {Entity}) => `${{entityProp}.id}`,
   sortComparer: false
 })
 
@@ -15,7 +15,7 @@ export const selector = new EntitySelector(adapter).selectors()
 
 const initialState: {Entity}State = adapter.getInitialState(defaultState)
 
-export function {entity}Reducer(state = initialState, action: actions.Actions) {
+export function {entityProp}Reducer(state = initialState, action: actions.Actions) {
   const reducer = new EntityReducer(adapter, state, (x: {Entity}) =>
     {Entity}.apply({ ...x })
   )
