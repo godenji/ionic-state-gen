@@ -7,11 +7,7 @@ Run `./generate --help` for usage
 # Requirements
 
 The following directories must exist in your application's `src/app`:
-action
-dao
-effect
-reducer
-store
+> action, dao, effect, reducer, store
 
 A model and optional key are required prior to running the source code generator. 
 By convention the source file names for model and key should be in lower case hyphenated 
