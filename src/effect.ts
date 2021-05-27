@@ -3,7 +3,6 @@ import { Actions, Effect, ofType } from '@ngrx/effects'
 import { DaoRepository } from '../dao/dao-repository'
 import { ResponseHandler } from 'ionic-state'
 import { catchError, flatMap, map } from 'rxjs/operators'
-import { List } from 'immutable'
 import * as actions from '../action/{entity}'
 
 @Injectable({ providedIn: 'root' })
@@ -50,7 +49,7 @@ export class {Entity}Effect extends ResponseHandler {
     ofType<actions.AddMany>(actions.ADD_MANY),
     flatMap(x =>
       this.repo.{entityProp}.createMany(x.payload).pipe(
-        map(x => new actions.AddedMany(List(x.body))),
+        map(x => new actions.AddedMany(x.body)),
         catchError(this.errorHandler)
       )
     )

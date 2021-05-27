@@ -5,7 +5,6 @@ import {
   QueryParams,
   PaginatedResult
 } from 'ionic-state'
-import { List } from 'immutable'
 import { {Entity} } from '../model/{entity}'
 import { {Key} } from '{KeyPath}'
 
@@ -45,7 +44,7 @@ export class Entity implements EntityActions<{Entity}, {Key}> {
     return new Add(x)
   }
 
-  createMany(xs: List<{Entity}>) {
+  createMany(xs: {Entity}[]) {
     return new AddMany(xs)
   }
 
@@ -53,7 +52,7 @@ export class Entity implements EntityActions<{Entity}, {Key}> {
     return new Update(x)
   }
 
-  updateMany(x: List<PatchUpdate>) {
+  updateMany(x: PatchUpdate[]) {
     return new UpdateMany(x)
   }
 
@@ -90,11 +89,11 @@ export class Updated extends NgrxAction<{Entity}> {
   readonly type = UPDATED
 }
 
-export class UpdateMany extends NgrxAction<List<PatchUpdate>> {
+export class UpdateMany extends NgrxAction<PatchUpdate[]> {
   readonly type = UPDATE_MANY
 }
 
-export class UpdatedMany extends NgrxAction<List<PatchUpdate>> {
+export class UpdatedMany extends NgrxAction<PatchUpdate[]> {
   readonly type = UPDATED_MANY
 }
 
@@ -122,11 +121,11 @@ export class Added extends NgrxAction<{Entity}> {
   readonly type = ADDED
 }
 
-export class AddMany extends NgrxAction<List<{Entity}>> {
+export class AddMany extends NgrxAction<{Entity}[]> {
   readonly type = ADD_MANY
 }
 
-export class AddedMany extends NgrxAction<List<{Entity}>> {
+export class AddedMany extends NgrxAction<{Entity}[]> {
   readonly type = ADDED_MANY
 }
 
