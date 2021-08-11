@@ -11,12 +11,7 @@ export class {Entity}Store extends EntityStore<{Entity}, {Key}> {
     super(
       new actions.Entity(),
       store.select(x => x.{entityProp}),
-      (x: state.{Entity}State) =>
-        state.selector
-          .selectAll(x)
-          .map(x =>
-            (x instanceof {Entity} ? x : {Entity}.apply(x))
-          )
+      (x: state.{Entity}State) => state.selector.selectAll(x)
     )
   }
 }

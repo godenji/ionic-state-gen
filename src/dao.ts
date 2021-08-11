@@ -8,10 +8,10 @@ export class {Entity}Dao extends Dao<{Entity}> {
   }
 
   deserialize(x: HttpResponse<{Entity}>) {
-    return x.clone({ body: {Entity}.apply(x.body) })
+    return x.clone({ body: Entity.apply<{Entity}>(x.body) })
   }
 
   deserializeMany(x: HttpResponse<{Entity}[]>) {
-    return x.clone({ body: x.body.map(x => {Entity}.apply(x)) })
+    return x.clone({ body: x.body.map(x => Entity.apply<{Entity}>(x)) })
   }
 }
