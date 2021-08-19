@@ -8,13 +8,15 @@ where:
     -k  (optional) entity key name (defaults to FooId)"
 
 DEFAULT_KEYPATH="../model/key"
+# available key types: uuid, int, long
+DEFAULT_KEYTYPE="int"
 
 # converts FooBarBaz to foo-bar-baz
 function asLowerDashed {
   sed -e 's/\([A-Z]\)/-\L\1/g' -e 's/^-//' <<< $1
 }
 
-while getopts ':p:e:k:' o; do
+while getopts ':p:e:k:kt:' o; do
   case "$o" in
     h) echo "$usage"
        exit
@@ -35,6 +37,9 @@ while getopts ':p:e:k:' o; do
        if [ $Key = "Pk" ]; then
          KeyPath="ionic-state"
        fi
+       ;;
+    kt)
+       KeyType="${OPTARG}"
        ;;
   esac
 done
@@ -58,6 +63,11 @@ if [ -z $Key ]; then
   KeyPath="$DEFAULT_KEYPATH/${entity}-id"
 fi
 
+# provide default key type
+if [ -z $KeyType ]; then
+  KeyType="$DEFAULT_KEYTYPE"
+fi
+
 echo
 echo "generating redux source files for '$entity' using path: '$ProjectPath'"
 echo "
@@ -67,7 +77,8 @@ substitution variables >>
   entity: $entity
   entityProp: $entityProp
   Key: $Key
-  KeyPath: $KeyPath"
+  KeyPath: $KeyPath
+  KeyType: $KeyType"
 
 # find/replace substitution variables in target source files
 sed -i 's/{ENTITY}/'${ENTITY}'/g' tmp/*
@@ -76,6 +87,7 @@ sed -i 's/{entityProp}/'${entityProp}'/g' tmp/*
 sed -i 's/{entity}/'${entity}'/g' tmp/*
 # use pipes to workaround around sed erroring on slashes in path replacement
 sed -i 's|{KeyPath}|'${KeyPath}'|g' tmp/*
+sed -i 's/{KeyType}/'${KeyType}'/g' tmp/*
 sed -i 's/{Key}/'${Key}'/g' tmp/*
 
 # copy modified source files to target directories
