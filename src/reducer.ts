@@ -16,9 +16,7 @@ export const selector = new EntitySelector(adapter).selectors()
 const initialState: {Entity}State = adapter.getInitialState(defaultState)
 
 export function {entityProp}Reducer(state = initialState, action: actions.Actions) {
-  const reducer = new EntityReducer(adapter, state, (x: {Entity}) =>
-    {Entity}.apply({ ...x })
-  )
+  const reducer = new EntityReducer(adapter, state, (x: {Entity}) => x)
   switch (action.type) {
     case actions.LOADING:
     case actions.LOADING_ONE: {
