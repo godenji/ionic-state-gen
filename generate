@@ -33,7 +33,7 @@ while getopts ':p:e:k:kt:' o; do
     k)
        # key/keypath substitution variables (Pk, pk)
        Key="${OPTARG^}"
-       KeyPath="$DEFAULT_KEYPATH/$(asLowerDashed ${OPTARG^})"
+       KeyPath="$DEFAULT_KEYPATH" # /$(asLowerDashed ${OPTARG^})"
        if [ $Key = "Pk" ]; then
          KeyPath="ionic-state"
        fi
@@ -60,12 +60,12 @@ fi
 # provide default key/keypath
 if [ -z $Key ]; then
   Key="${Entity}Id"
-  KeyPath="$DEFAULT_KEYPATH/${entity}-id"
+  KeyPath="$DEFAULT_KEYPATH" #/${entity}-id"
 fi
 
 # provide default key type
 if [ -z $KeyType ]; then
-  KeyType="$DEFAULT_KEYTYPE"
+  KeyType="'$DEFAULT_KEYTYPE'"
 fi
 
 echo
