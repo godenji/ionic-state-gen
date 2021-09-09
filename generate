@@ -1,5 +1,5 @@
 #!/bin/bash
-cp -p src/* tmp/
+cp -p src/*.ts tmp/
 
 usage="$(basename "$0") [-p] [-e] [-k] code generator for redux-angular boilerplate
 where:
@@ -80,15 +80,19 @@ substitution variables >>
   KeyPath: $KeyPath
   KeyType: $KeyType"
 
-# find/replace substitution variables in target source files
-sed -i 's/{ENTITY}/'${ENTITY}'/g' tmp/*
-sed -i 's/{Entity}/'${Entity}'/g' tmp/*
-sed -i 's/{entityProp}/'${entityProp}'/g' tmp/*
-sed -i 's/{entity}/'${entity}'/g' tmp/*
-# use pipes to workaround around sed erroring on slashes in path replacement
-sed -i 's|{KeyPath}|'${KeyPath}'|g' tmp/*
-sed -i 's/{KeyType}/'${KeyType}'/g' tmp/*
-sed -i 's/{Key}/'${Key}'/g' tmp/*
+replace () {
+  # find/replace substitution variables in target source files
+  # excludes commented codegen lines (accounting for zero or more whitespace characters)
+  sed -i '/\s*\/\/codegen/!s/{ENTITY}/'${ENTITY}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{Entity}/'${Entity}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{entityProp}/'${entityProp}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{entity}/'${entity}'/g' $@
+  # use pipes to workaround around sed erroring on slashes in path replacement
+  sed -i '/\s*\/\/codegen/!s|{KeyPath}|'${KeyPath}'|g' $@
+  sed -i '/\s*\/\/codegen/!s/{KeyType}/'${KeyType}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{Key}/'${Key}'/g' $@
+}
+replace tmp/*
 
 # copy modified source files to target directories
 files=tmp/*.ts
@@ -97,3 +101,18 @@ do
   path="$ProjectPath/$(basename $f .ts)/${entity}.ts"
   cp -p $f $path
 done
+
+# modify target files-to-patch in place
+files=(
+  "$ProjectPath/dao/dao-repository.ts"
+  "$ProjectPath/store/store-repository.ts"
+  "$ProjectPath/app.module.ts"
+  "$ProjectPath/reducer/index.ts"
+)
+for f in ${files[@]}
+do
+  # duplicates codegen line(s) in target src file for sed replace task
+  sed -i -n 'p; s/\/\/codegen|//p' $f
+  replace $f
+done
+
