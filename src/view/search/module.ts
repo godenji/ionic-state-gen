@@ -10,4 +10,3 @@ import { {Entity}SearchModule } from '../../shared/module/{entity}-search.module
   declarations: [{Entity}SearchPage]
 })
 export class {Entity}SearchPageModule {}
-

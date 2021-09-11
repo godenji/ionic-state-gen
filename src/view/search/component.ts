@@ -25,4 +25,3 @@ export class {Entity}SearchComponent extends Searchable<{Entity}> {
       x.toString().toLowerCase().includes(search.toLowerCase())
     )
 }
-

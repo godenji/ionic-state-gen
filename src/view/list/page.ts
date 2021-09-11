@@ -17,4 +17,3 @@ export class {Entity}ListPage extends ModalShow {
     this.showModal({Entity}EditPage, { {entityProp}: x })
   }
 }
-

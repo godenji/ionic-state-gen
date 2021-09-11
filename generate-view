@@ -1,0 +1,20 @@
+#!/bin/bash
+. base
+
+dirs=src/view/*
+for d in $dirs
+do
+  dname=$(basename $d)
+  echo $dname
+  files=`realpath "./src/view/$dname/*"`
+  for f in $files
+  do
+    action="$entity-$dname"
+    path="$ProjectPath/view/$entity/$action/$action.$(basename $f)"
+    srcFile=`realpath "./src/view/$dname/$(basename $f)"`
+    echo "copying template $srcFile to $path"
+    cp $srcFile $path
+    echo "patching view files for $path"
+    replace $path
+  done
+done

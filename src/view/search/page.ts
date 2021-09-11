@@ -13,4 +13,3 @@ export class {Entity}SearchPage {
     this.modal.dismiss(x)
   }
 }
-

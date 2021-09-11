@@ -10,4 +10,3 @@ import { {Entity}FormComponent } from '../{entity}-form/{entity}-form.component'
   declarations: [{Entity}EditPage, {Entity}FormComponent]
 })
 export class {Entity}EditPageModule {}
-

@@ -10,4 +10,3 @@ import { {Entity}SearchComponent } from '../../{entity}/{entity}-search/{entity}
   exports: [{Entity}SearchComponent]
 })
 export class {Entity}SearchModule {}
-

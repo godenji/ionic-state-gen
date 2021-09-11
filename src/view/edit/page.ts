@@ -34,4 +34,3 @@ export class {Entity}EditPage implements OnInit {
     )
   }
 }
-
