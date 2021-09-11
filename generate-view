@@ -1,6 +1,12 @@
 #!/bin/bash
 . base
 
+srcShared=src/shared/module/module.ts
+targetShared="$ProjectPath/view/shared/module/$entity-search.module.ts"
+echo "copying search module template to $targetShared"
+cp $srcShared $targetShared
+replace $targetShared
+
 dirs=src/view/*
 for d in $dirs
 do
@@ -10,11 +16,12 @@ do
   for f in $files
   do
     action="$entity-$dname"
-    path="$ProjectPath/view/$entity/$action/$action.$(basename $f)"
-    srcFile=`realpath "./src/view/$dname/$(basename $f)"`
-    echo "copying template $srcFile to $path"
-    cp $srcFile $path
-    echo "patching view files for $path"
-    replace $path
+    srcFileName=basename $f
+    srcFilePath=`realpath "./src/view/$dname/$srcFileName"`
+    targetPath="$ProjectPath/view/$entity/$action/$action.$srcFileName"
+    echo "copying template $srcFilePath to $targetPath"
+    cp $srcFilePath $targetPath
+    echo "patching view files for $targetPath"
+    replace $targetPath
   done
 done
