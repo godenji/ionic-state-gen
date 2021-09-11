@@ -1,0 +1,93 @@
+#!/bin/bash
+usage="$(basename "$0") [-p] [-e] [-k] code generator for redux-angular boilerplate
+where:
+    -p  (required) path of project directory (e.g. ~/path/to/your/project)
+    -e  (required) entity name (e.g. Foo)
+    -k  (optional) entity key name (defaults to FooId)
+    -kt (optional) entity key type (defaults to 'int')"
+
+DEFAULT_KEYPATH="../model/key"
+# available key types: uuid, int, long
+DEFAULT_KEYTYPE="int"
+
+# converts FooBarBaz to foo-bar-baz
+function asLowerDashed {
+  sed -e 's/\([A-Z]\)/-\L\1/g' -e 's/^-//' <<< $1
+}
+
+while getopts ':p:e:k:kt:' o; do
+  case "$o" in
+    h) echo "$usage"
+       exit
+       ;;
+    p) ProjectPath="$(realpath -s $OPTARG)/src/app"
+       ;;
+    e)
+       # entity substitution variables (USER, User, user)
+       ENTITY=${OPTARG^^}
+       Entity=${OPTARG^}
+       entityProp=${OPTARG,,}
+       entity="$(asLowerDashed ${OPTARG^})"
+       ;;
+    k)
+       # key/keypath substitution variables (Pk, pk)
+       Key="${OPTARG^}"
+       KeyPath="$DEFAULT_KEYPATH" # /$(asLowerDashed ${OPTARG^})"
+       if [ $Key = "Pk" ]; then
+         KeyPath="ionic-state"
+       fi
+       ;;
+    kt)
+       KeyType="${OPTARG}"
+       ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+# missing args, show help
+if [ -z $ProjectPath ] || [ -z $Entity ]; then
+  echo "$usage"
+  exit
+fi
+
+# non-existent target project directory
+if [ ! -d "$ProjectPath" ]; then
+  echo "path '$ProjectPath' does not exist!"
+  exit
+fi
+
+# provide default key/keypath
+if [ -z $Key ]; then
+  Key="${Entity}Id"
+  KeyPath="$DEFAULT_KEYPATH" #/${entity}-id"
+fi
+
+# provide default key type
+if [ -z $KeyType ]; then
+  KeyType="'$DEFAULT_KEYTYPE'"
+fi
+
+replace () {
+  # find/replace substitution variables in target source files
+  # excludes commented codegen lines (accounting for zero or more whitespace characters)
+  sed -i '/\s*\/\/codegen/!s/{ENTITY}/'${ENTITY}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{Entity}/'${Entity}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{entityProp}/'${entityProp}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{entity}/'${entity}'/g' $@
+  # use pipes to workaround around sed erroring on slashes in path replacement
+  sed -i '/\s*\/\/codegen/!s|{KeyPath}|'${KeyPath}'|g' $@
+  sed -i '/\s*\/\/codegen/!s/{KeyType}/'${KeyType}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{Key}/'${Key}'/g' $@
+}
+
+echo
+echo "generating redux source files for '$entity' using path: '$ProjectPath'"
+echo "
+substitution variables >>
+  ENTITY: $ENTITY
+  Entity: $Entity
+  entity: $entity
+  entityProp: $entityProp
+  Key: $Key
+  KeyPath: $KeyPath
+  KeyType: $KeyType"
