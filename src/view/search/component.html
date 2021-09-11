@@ -1,0 +1,26 @@
+<ng-container *ngIf="searchItems$ | async as p">
+  <ion-searchbar
+    (ionChange)="search(p, $event)"
+    (ionCancel)="reset()"
+      placeholder="{Entity} Criteria"
+  ></ion-searchbar>
+  <ion-list>
+    <ion-item *ngFor="let x of p.payload | paginate: toConfig(p)">
+      <ion-label
+        >{{ x }}</ion-label
+      >
+      <ion-icon
+        (click)="showEdit(x)"
+        class="pointer"
+        slot="end"
+        name="create"
+        title="Edit {Entity}"
+      ></ion-icon>
+    </ion-item>
+    <pagination-controls
+      *ngIf="showControls(p)"
+      (pageChange)="pageChange(p, $event)"
+    ></pagination-controls>
+  </ion-list>
+</ng-container>
+

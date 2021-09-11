@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon name="arrow-back" size="large"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title> Add/Edit {Entity} </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <{entity}-form [{entityProp}]="{entityProp}" (saved)="save($event)"></{entity}-form>
+</ion-content>
+

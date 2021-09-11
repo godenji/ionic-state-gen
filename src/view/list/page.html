@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle>
+        <ion-button>
+          <ion-icon slot="icon-only" name="menu"></ion-icon>
+        </ion-button>
+      </ion-menu-toggle>
+    </ion-buttons>
+    <ion-title class="logo">Manage {Entity}s</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item *ngIf="modalMessage$ | async as message">
+    <ion-label color="success">{{ message }}</ion-label>
+  </ion-item>
+  <{entity}-search (entityEdit)="showEdit($event)"></{entity}-search>
+  <ion-fab vertical="top" horizontal="end" slot="fixed" edge="true">
+    <ion-fab-button size="small" color="secondary" (click)="showEdit()">
+      <ion-icon name="add" title="Add {Entity}"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
