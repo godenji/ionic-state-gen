@@ -16,7 +16,7 @@ do
   for f in $files
   do
     action="$entity-$dname"
-    srcFileName=basename $f
+    srcFileName=$(basename $f)
     srcFilePath=`realpath "./src/view/$dname/$srcFileName"`
     targetPath="$ProjectPath/view/$entity/$action/$action.$srcFileName"
     echo "copying template $srcFilePath to $targetPath"
