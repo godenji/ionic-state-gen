@@ -15,6 +15,10 @@ function asLowerDashed {
   sed -e 's/\([A-Z]\)/-\L\1/g' -e 's/^-//' <<< $1
 }
 
+function asCamelCase {
+  sed -E 's/^([A-Z])|[[:blank:]]+([A-Za-z])/\l\1\U\2/g' <<< $1
+}
+
 while getopts ':p:e:k:kt:' o; do
   case "$o" in
     h) echo "$usage"
@@ -26,7 +30,7 @@ while getopts ':p:e:k:kt:' o; do
        # entity substitution variables (USER, User, user)
        ENTITY=${OPTARG^^}
        Entity=${OPTARG^}
-       entityProp=${OPTARG,,}
+       entityProp="$(asCamelCase ${OPTARG^})"
        entity="$(asLowerDashed ${OPTARG^})"
        ;;
     k)
