@@ -1,3 +1,3 @@
-<form ngNativeValidate [formGroup]="form" (submit)="save()" padding>
+<form ngNativeValidate [formGroup]="form" (submit)="save()" (keyup.enter)="save()" padding>
   <ion-button [disabled]="!form.valid" type="submit" block> Save </ion-button>
 </form>
