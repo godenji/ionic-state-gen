@@ -15,6 +15,11 @@ function asLowerDashed {
   sed -e 's/\([A-Z]\)/-\L\1/g' -e 's/^-//' <<< $1
 }
 
+# converts FooBarBaz to FOO_BAR_BAZ
+function asUpperUnderscore {
+  sed -e 's/\([A-Z]\)/_\U\1/g' -e 's/^_//' -e 's/\([a-z]\)/\U\1/g' <<< $1
+}
+
 function asCamelCase {
   sed -E 's/^([A-Z])|[[:blank:]]+([A-Za-z])/\l\1\U\2/g' <<< $1
 }
@@ -29,6 +34,7 @@ while getopts ':p:e:k:kt:' o; do
     e)
        # entity substitution variables (USER, User, user)
        ENTITY=${OPTARG^^}
+       ENTITY_UNDERSCORE="$(asUpperUnderscore ${OPTARG^})"
        Entity=${OPTARG^}
        entityProp="$(asCamelCase ${OPTARG^})"
        entity="$(asLowerDashed ${OPTARG^})"
@@ -75,6 +81,7 @@ replace () {
   # find/replace substitution variables in target source files
   # excludes commented codegen lines (accounting for zero or more whitespace characters)
   sed -i '/\s*\/\/codegen/!s/{ENTITY}/'${ENTITY}'/g' $@
+  sed -i '/\s*\/\/codegen/!s/{ENTITY_UNDERSCORE}/'${ENTITY_UNDERSCORE}'/g' $@
   sed -i '/\s*\/\/codegen/!s/{Entity}/'${Entity}'/g' $@
   sed -i '/\s*\/\/codegen/!s/{entityProp}/'${entityProp}'/g' $@
   sed -i '/\s*\/\/codegen/!s/{entity}/'${entity}'/g' $@
@@ -89,6 +96,7 @@ echo "generating redux source files for '$entity' using path: '$ProjectPath'"
 echo "
 substitution variables >>
   ENTITY: $ENTITY
+  ENTITY_UNDERSCORE: $ENTITY_UNDERSCORE
   Entity: $Entity
   entity: $entity
   entityProp: $entityProp
