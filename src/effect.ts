@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Actions, Effect, ofType } from '@ngrx/effects'
+import { Actions, ofType, createEffect } from '@ngrx/effects'
 import { DaoRepository } from '../dao/dao-repository'
 import { ResponseHandler } from 'ionic-state'
 import { catchError, flatMap, map } from 'rxjs/operators'
@@ -11,8 +11,7 @@ export class {Entity}Effect extends ResponseHandler {
     super(err => new actions.Failed(err))
   }
 
-  @Effect()
-  load = this.actions$.pipe(
+  load = createEffect(() = this.actions$.pipe(
     ofType<actions.Loading>(actions.LOADING),
     flatMap(x =>
       this.repo.{entityProp}.findAll(x.payload).pipe(
@@ -20,10 +19,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  loadOne = this.actions$.pipe(
+  loadOne = createEffect(() = this.actions$.pipe(
     ofType<actions.LoadingOne>(actions.LOADING_ONE),
     flatMap(x =>
       this.repo.{entityProp}.findById(x.payload).pipe(
@@ -31,10 +29,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  add = this.actions$.pipe(
+  add = createEffect(() = this.actions$.pipe(
     ofType<actions.Add>(actions.ADD),
     flatMap(x =>
       this.repo.{entityProp}.create(x.payload).pipe(
@@ -42,10 +39,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  addMany = this.actions$.pipe(
+  addMany = createEffect(() = this.actions$.pipe(
     ofType<actions.AddMany>(actions.ADD_MANY),
     flatMap(x =>
       this.repo.{entityProp}.createMany(x.payload).pipe(
@@ -53,10 +49,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  update = this.actions$.pipe(
+  update = createEffect(() = this.actions$.pipe(
     ofType<actions.Update>(actions.UPDATE),
     flatMap(x =>
       this.repo.{entityProp}.update(x.payload).pipe(
@@ -64,10 +59,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  updateMany = this.actions$.pipe(
+  updateMany = createEffect(() = this.actions$.pipe(
     ofType<actions.UpdateMany>(actions.UPDATE_MANY),
     flatMap(x =>
       this.repo.{entityProp}.updateMany(x.payload).pipe(
@@ -75,10 +69,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  delete = this.actions$.pipe(
+  delete = createEffect(() = this.actions$.pipe(
     ofType<actions.Delete>(actions.DELETE),
     flatMap(x =>
       this.repo.{entityProp}.delete(x.payload).pipe(
@@ -86,10 +79,9 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 
-  @Effect()
-  deleteMany = this.actions$.pipe(
+  deleteMany = createEffect(() = this.actions$.pipe(
     ofType<actions.DeleteMany>(actions.DELETE_MANY),
     flatMap(x =>
       this.repo.{entityProp}.deleteMany(x.payload).pipe(
@@ -97,5 +89,5 @@ export class {Entity}Effect extends ResponseHandler {
         catchError(this.errorHandler)
       )
     )
-  )
+  ))
 }
