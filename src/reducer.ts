@@ -1,5 +1,10 @@
 import { createEntityAdapter, EntityAdapter } from '@ngrx/entity'
-import { EntityReducer, EntitySelector, EntityState, defaultState } from 'ionic-state'
+import {
+  EntityReducer,
+  EntitySelector,
+  EntityState,
+  defaultState
+} from 'ionic-state'
 import { {Entity} } from '../model/{entity}'
 import { {Key} } from '{KeyPath}'
 import * as actions from '../action/{entity}'
@@ -15,7 +20,10 @@ export const selector = new EntitySelector(adapter).selectors()
 
 const initialState: {Entity}State = adapter.getInitialState(defaultState)
 
-export function {entityProp}Reducer(state = initialState, action: actions.Actions) {
+export function {entityProp}Reducer(
+  state = initialState,
+  action: actions.Actions
+) {
   const reducer = new EntityReducer(adapter, state, (x: {Entity}) => x)
   switch (action.type) {
     case actions.LOADING:
@@ -55,6 +63,10 @@ export function {entityProp}Reducer(state = initialState, action: actions.Action
 
     case actions.UPDATED_MANY: {
       return reducer.updatedMany(action.payload)
+    }
+
+    case actions.PATCHED_MANY: {
+      return reducer.patchedMany(action.payload)
     }
 
     case actions.DELETE:

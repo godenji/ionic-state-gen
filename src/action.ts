@@ -20,6 +20,7 @@ export const UPDATE = 'UPDATE {ENTITY}'
 export const UPDATED = 'UPDATED {ENTITY}'
 export const UPDATE_MANY = 'UPDATE {ENTITY}S'
 export const UPDATED_MANY = 'UPDATED {ENTITY}S'
+export const PATCHED_MANY = 'PATCHED {ENTITY}S'
 export const DELETE = 'DELETE {ENTITY}'
 export const DELETED = 'DELETED {ENTITY}'
 export const DELETE_MANY = 'DELETE {ENTITY}S'
@@ -52,7 +53,7 @@ export class Entity implements EntityActions<{Entity}, {Key}> {
     return new Update(x)
   }
 
-  updateMany(x: PatchUpdate[]) {
+  updateMany(x: {Entity}[]) {
     return new UpdateMany(x)
   }
 
@@ -89,13 +90,18 @@ export class Updated extends NgrxAction<{Entity}> {
   readonly type = UPDATED
 }
 
-export class UpdateMany extends NgrxAction<PatchUpdate[]> {
+export class UpdateMany extends NgrxAction<{Entity}[]> {
   readonly type = UPDATE_MANY
 }
 
-export class UpdatedMany extends NgrxAction<PatchUpdate[]> {
+export class UpdatedMany extends NgrxAction<{Entity}[]> {
   readonly type = UPDATED_MANY
 }
+
+export class PatchedMany extends NgrxAction<PatchUpdate[]> {
+  readonly type = PATCHED_MANY
+}
+
 
 export class Delete extends NgrxAction<{Entity}> {
   readonly type = DELETE
@@ -146,6 +152,7 @@ export type Actions =
   | Updated
   | UpdateMany
   | UpdatedMany
+  | PatchedMany
   | Delete
   | Deleted
   | DeleteMany
